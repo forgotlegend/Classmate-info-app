@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Classmate Info Reveal App</title>
+  
+  <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Classmate Info Reveal App</title>
+
+  <!-- 🟢 Add these below: -->
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon-192.png" type="image/png">
+  <meta name="theme-color" content="#00ffe7" />
+  
+  <style>
+    /* Your existing styles here */
+  </style>
+</head>
+  <style>
+    body {
+      background-color: #0f0f0f;
+      color: #00ffe7;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #00ff99;
+    }
+    .search-bar {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    input[type="text"] {
+      padding: 10px;
+      width: 80%;
+      max-width: 400px;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: 2px solid #00ffe7;
+      background: #1a1a1a;
+      color: #00ffe7;
+    }
+    .classmate-list {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .classmate-item {
+      padding: 12px;
+      margin: 10px 0;
+      background-color: #1a1a1a;
+      border-radius: 12px;
+      border: 2px solid #00ffcc;
+      box-shadow: 0 0 12px #00ffcc55;
+      cursor: pointer;
+    }
+    .info-buttons {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    button {
+      background-color: #00ffe7;
+      color: #0f0f0f;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background-color: #00ccbb;
+    }
+    .result {
+      margin-top: 10px;
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Classmate Info Reveal App</h1>
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search for a classmate..." oninput="filterList()" />
+  </div>
+  <div class="classmate-list" id="classmateList"></div>
+
+  <script>
+    const classmates = {
+      "Delight": { iq: "105-115", crush: "Doesn't have currently", football: "Strength: Defending, Weakness: Vision of field", discipline: "Very good", appearance: 91 },
+      "Caleb": { iq: "120-135", crush: "Rather not say", football: "Strength: Aggressiveness, Weakness: Every other thing", discipline: "Very good", appearance: 85 },
+      "Isaac": { iq: "Infinite", crush: "Not interested in relationships", football: "Unknown", discipline: "Excellent", appearance: 100 },
+      "Ayomikun": { iq: "100-110", crush: "Doesn't have currently", football: "Strength: Vision of field, Weakness: Physicality", discipline: "Good", appearance: 70 },
+      "Gerrard": { iq: "95-105", crush: "Unknown", football: "Strength: Unknown, Weakness: Dribbling", discipline: "Below average", appearance: 75 },
+      "Michael": { iq: "100-110", crush: "Not interested", football: "Not interested", discipline: "High average", appearance: 79 },
+      "Emmanuel": { iq: "100-110", crush: "Not interested", football: "Not interested", discipline: "Average", appearance: 70 },
+      "Ojo": { iq: "100-110", crush: "Not interested", football: "Strength: Everything, Weakness: Not found", discipline: "Average", appearance: 76 },
+      "Samuel": { iq: "100-120", crush: "Unknown", football: "Strength: Goalkeeping, Weakness: Every other thing", discipline: "Good", appearance: 80 },
+      "Gideon": { iq: "90-115", crush: "Not interested", football: "Strength: Juggling, Weakness: Physicality", discipline: "Below average", appearance: 50 },
+      "Dennis": { iq: "100-110", crush: "Not interested", football: "Strength: Passing, Weakness: Dribbling", discipline: "Average", appearance: 60 },
+      "Abduraheem": { iq: "110-120", crush: "Unknown", football: "Strength: Everything, Weakness: Not found", discipline: "Above average", appearance: 82 },
+      "Kofo": { iq: "110-120", crush: "Not interested", football: "Not interested", discipline: "Good", appearance: 83 },
+      "Favour": { iq: "110-120", crush: "Rather not say", football: "Not interested", discipline: "Slightly good", appearance: 83 },
+      "Helen": { iq: "111-121", crush: "Rather not say", football: "Not interested", discipline: "Good", appearance: 83 },
+      "Tamilore": { iq: "110-120", crush: "Doesn't like boys", football: "Not interested", discipline: "Good", appearance: 83 },
+      "Irebami": { iq: "100-115", crush: "Not interested", football: "Not interested", discipline: "Average or below average", appearance: 75 },
+      "Muqsit": { iq: "101-116", crush: "Anonymous", football: "Strength: Long Shots, Weakness: Complaining", discipline: "Good", appearance: 80 },
+      "Mohammed": { iq: "110-115", crush: "Anonymous", football: "Strength: Passing, Weakness: Being a Real Madrid Fan", discipline: "Below average", appearance: 75 },
+      "Dunni": { iq: "110-120", crush: "Anonymous", football: "Not interested", discipline: "Good", appearance: 83 },
+      "Korede": { iq: "100-110", crush: "Doesn't have", football: "Strength: Body, Weakness: Goalkeeping", discipline: "Below average", appearance: 76 },
+      "Humphery": { iq: "111-121", crush: "Anonymous", football: "Writing", discipline: "Average", appearance: 80 },
+      "Festus": { iq: "110-120", crush: "Anonymous", football: "Strength: Confidence, Weakness: Overconfidence", discipline: "Above average", appearance: 77 },
+      "Brian": { iq: "105-115", crush: "Unknown", football: "Strength: Nothing, Weakness: Everything", discipline: "Below average", appearance: 74 },
+      "Desayo": { iq: "105-115", crush: "Unknown", football: "Strength: Dribbling, Passing, Weakness: Height and Body", discipline: "Average", appearance: 79 },
+    };
+
+    function filterList() {
+      const input = document.getElementById("searchInput").value.toLowerCase();
+      const list = document.getElementById("classmateList");
+      list.innerHTML = "";
+
+      Object.keys(classmates).forEach(name => {
+        if (name.toLowerCase().includes(input)) {
+          const div = document.createElement("div");
+          div.className = "classmate-item";
+          div.innerHTML = `
+            <strong>${name}</strong>
+            <div class="info-buttons">
+              <button onclick="reveal('${name}', 'iq')">IQ</button>
+              <button onclick="reveal('${name}', 'crush')">Crush</button>
+              <button onclick="reveal('${name}', 'football')">Football</button>
+              <button onclick="reveal('${name}', 'discipline')">Discipline</button>
+              <button onclick="reveal('${name}', 'appearance')">Appearance</button>
+            </div>
+            <div class="result" id="${name}-result"></div>
+          `;
+          list.appendChild(div);
+        }
+      });
+    }
+
+    function flickerNumber(id, final, isIQ = false) {
+      let count = 0;
+      const interval = setInterval(() => {
+        const rand = Math.floor(Math.random() * (isIQ ? 150 : 101));
+        document.getElementById(id).innerText = (isIQ ? "IQ: " : "Appearance: ") + rand;
+        count++;
+        if (count > 20) {
+          clearInterval(interval);
+          document.getElementById(id).innerText = (isIQ ? "IQ: " : "Appearance: ") + final;
+        }
+      }, 200);
+    }
+
+    function reveal(name, category) {
+      const target = document.getElementById(`${name}-result`);
+      if (category === "iq") {
+        flickerNumber(`${name}-result`, classmates[name].iq, true);
+      } else if (category === "appearance") {
+        flickerNumber(`${name}-result`, classmates[name].appearance);
+      } else {
+        target.innerText = `${category.charAt(0).toUpperCase() + category.slice(1)}: ${classmates[name][category]}`;
+      }
+    }
+
+    filterList();
+  </script>
+  
+  <script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker
+      .register("./service-worker.js")
+      .then(() => console.log("Service Worker registered"))
+      .catch((err) => console.error("Service Worker failed:", err));
+  }
+</script>
+</body>
+</html>
+</body>
+</html>
+
